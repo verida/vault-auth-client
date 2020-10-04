@@ -1,0 +1,19 @@
+{
+  "name": "@verida/vault-auth-client",
+  "version": "0.1.0",
+  "description": "Verida Vault Authentication Client: Facilitates authentication between the browser and Verida Vault",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verida/vault-auth-client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/verida/vault-auth-client/issues"
+  },
+  "homepage": "https://github.com/verida/vault-auth-client#readme"
+}
