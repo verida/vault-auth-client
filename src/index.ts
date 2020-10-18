@@ -10,7 +10,7 @@ export default class AuthClient {
 
     constructor(config: AuthClientConfig) {
         this.config = _.merge({
-            baseUri: 'https://vault.verida.io/start'
+            loginUri: 'https://vault.verida.io/start'
         }, config)
 
         this.ws = new WebSocket(config.serverUri)
@@ -31,7 +31,8 @@ export default class AuthClient {
         const data = <AuthResponse> JSON.parse(event.data)
 
         switch (data.type) {
-            case "auth":
+            case "auth-client-request":
+                console.log(this.config, data)
                 const canvas = document.getElementById(this.config.canvasId)
                 const qrData = this.generateQrData(data.message)
                 console.log(qrData)
@@ -54,7 +55,7 @@ export default class AuthClient {
         const symKeyBytes = EncryptionUtils.randomKey(32)
         const symKeyHex = "0x" + Buffer.from(symKeyBytes).toString("hex")
         
-        return `${this.config.baseUri}?key=${symKeyHex}&req=${didJwt}`
+        return `${this.config.loginUri}?key=${symKeyHex}&req=${didJwt}`
     }
 
 }
