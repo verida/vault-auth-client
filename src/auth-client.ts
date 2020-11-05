@@ -31,7 +31,7 @@ export default class AuthClient {
         const data = <AuthResponse> JSON.parse(event.data)
 
         switch (data.type) {
-            case "auth":
+            case "auth-client-request":
                 const canvas = document.getElementById(this.config.canvasId)
                 const qrData = this.generateQrData(data.message)
                 console.log(qrData)
