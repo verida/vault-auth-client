@@ -1,3 +1,4 @@
+/*  eslint no-undef: ignore */
 import AuthClient from './index';
 // @ts-ignore
 import * as Logo from './assets/logo.svg';
@@ -9,9 +10,14 @@ export default function() {
 
   const serverUri = veridaButton.getAttribute('verida-config-server-uri');
   if (!serverUri) return Error('Verida config server URI not found!')
+
+  let loginUri = veridaButton.getAttribute('verida-config-login-uri');
+  if (!loginUri) loginUri = window.location.origin;
+
   const authConfig = {
-    serverUri,
-    canvasId: 'canvas'
+    serverUri: serverUri,
+    loginUri: loginUri,
+    canvasId: 'verida-auth-client-canvas'
   }
 
   const modalHTML = `
@@ -25,7 +31,7 @@ export default function() {
             <span>Login with</span>
             <img src="${ Logo }" alt="verida logo">
           </div>
-          <canvas id="canvas" class="verida-modal-qr"></canvas>
+          <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
           <p style="text-align: center;">Scan this QR code on your mobile phone to login or signup.</p>
         </div>
       </div>
