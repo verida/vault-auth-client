@@ -4,7 +4,7 @@
   "description": "Verida Vault Authentication Client: Facilitates authentication between the browser and Verida Vault",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf ./dist && tsc && mkdir -p ./dist/assets && cp ./src/assets/* ./dist/assets/",
+    "build": "rm -rf ./dist && tsc && mkdir -p ./dist/assets && cp -r ./src/assets/* ./dist/assets/",
     "preinstall": "npm install --ignore-scripts",
     "prepublish": "npm run build",
     "postinstall": "npm run build"

@@ -2,6 +2,8 @@
 import AuthClient from './index';
 // @ts-ignore
 import * as Logo from './assets/logo.svg';
+// @ts-ignore
+import * as NunitoSans from './assets/fonts/NunitoSans-Regular.ttf';
 
 export default function() {
   const veridaButton = document.querySelector("[verida-config-server-uri]")
@@ -38,6 +40,10 @@ export default function() {
     </div>
 
     <style>
+      @font-face {
+        font-family: "NunitoSans";
+        src: url(${ NunitoSans }) format("truetype");
+      }
       .verida-modal-wrapper {
         display: none;
         position: fixed;
@@ -57,6 +63,8 @@ export default function() {
         border: 1px solid #888;
         width: 80%;
         min-height: 80%;
+        font-family: NunitoSans, Avenir, Helvetica, Arial, sans-serif;
+        font-weight: 700;
       }
 
       .verida-modal-body {
@@ -79,8 +87,6 @@ export default function() {
         flex-direction: column;
         padding: 5px;
         margin: 0 0 10px;
-        box-shadow: 0 0px 5px;
-        border-bottom: 1px solid rgb(0,0,0,0.1);
       }
       .verida-modal-body-title {
         padding: 0 0 3%;
@@ -94,6 +100,7 @@ export default function() {
 
       .verida-modal-close {
         align-self: flex-end;
+        padding-right: 10px;
         color: #aaa;
         font-size: 28px;
         font-weight: bold;
