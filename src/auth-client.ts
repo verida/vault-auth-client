@@ -1,7 +1,7 @@
 import { AuthClientConfig, AuthResponse } from "./interfaces/AuthClient"
 import EncryptionUtils from "@verida/encryption-utils"
 const _ = require("lodash")
-const QRCode = require('qrcode')
+const QRCode = require("qrcode")
 
 export default class AuthClient {
 
