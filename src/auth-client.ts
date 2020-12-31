@@ -31,7 +31,7 @@ export default class AuthClient {
         const data = <AuthResponse> JSON.parse(event.data)
 
         switch (data.type) {
-            case "auth-client-request":
+            case 'auth-client-request':
                 const canvas = document.getElementById(this.config.canvasId)
                 const qrData = this.generateQrData(data.message)
                 console.log(qrData)
@@ -40,6 +40,10 @@ export default class AuthClient {
                         console.error("Error: ", err)
                     }
                 })
+                return
+            case 'auth-client-response':
+                console.log('response from server for the client!')
+                console.log(data)
                 return
         }
 
@@ -54,7 +58,9 @@ export default class AuthClient {
         const symKeyBytes = EncryptionUtils.randomKey(32)
         const symKeyHex = "0x" + Buffer.from(symKeyBytes).toString("hex")
 
-        return `${this.config.loginUri}?key=${symKeyHex}&req=${didJwt}`
+        // note: can't use `key` as a parameter as its a reserved word in react native
+        // instead use `_k` (key) and `_r` (request)
+        return `${this.config.loginUri}?_k=${symKeyHex}&_r=${didJwt}`
     }
 
 }
