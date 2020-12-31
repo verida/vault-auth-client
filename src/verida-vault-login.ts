@@ -4,23 +4,19 @@ import AuthClient from './index';
 import * as Logo from './assets/logo.svg';
 // @ts-ignore
 import * as NunitoSans from './assets/fonts/NunitoSans-Regular.ttf';
+import { AuthClientConfig } from './interfaces/AuthClient';
+const _ = require('lodash')
 
-export default function() {
-  const veridaButton = document.querySelector("[verida-config-server-uri]")
-
-  if (!veridaButton) return;
-
-  const serverUri = veridaButton.getAttribute('verida-config-server-uri');
-  if (!serverUri) return Error('Verida config server URI not found!')
-
-  let loginUri = veridaButton.getAttribute('verida-config-login-uri');
-  if (!loginUri) loginUri = window.location.origin;
-
-  const authConfig = {
-    serverUri: serverUri,
-    loginUri: loginUri,
-    canvasId: 'verida-auth-client-canvas'
+export default function(config: Omit<AuthClientConfig, "loginUri" | "canvasId">) {
+  const veridaButton = document.querySelector("[verida-vault-login-btn]")
+  if (!veridaButton) {
+    throw new Error('Unable to locate login button')
   }
+
+  const authConfig: AuthClientConfig = _.merge({
+    loginUri: 'https://vault.verida.io/start',
+    canvasId: 'verida-auth-client-canvas'
+  }, config)
 
   const modalHTML = `
     <div id="verida-modal" hidden="true" class="verida-modal-wrapper">
