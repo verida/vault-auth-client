@@ -7,10 +7,13 @@ export default class AuthClient {
 
     ws: any
     config: AuthClientConfig
+    symKeyBytes?: Uint8Array
 
     constructor(config: AuthClientConfig) {
         this.config = _.merge({
-            loginUri: 'https://vault.verida.io/start'
+            schemeUri: 'veridavault://login-request',
+            loginUri: 'https://vault.verida.io/start',
+            deeplinkId: 'verida-auth-client-deeplink'
         }, config)
 
         this.ws = new WebSocket(config.serverUri)
@@ -20,22 +23,37 @@ export default class AuthClient {
             client.newMessage(event)
         }
 
+        config = this.config
         this.ws.onopen = function() {
-            client.ws.send(JSON.stringify({type: 'generateJwt'}))
+            client.ws.send(JSON.stringify({type: 'generateJwt', appName: config.appName}))
         }
 
         this.ws.onerror = this.error
     }
 
     newMessage(event: MessageEvent) {
-        const data = <AuthResponse> JSON.parse(event.data)
+        const response = <AuthResponse> JSON.parse(event.data)
 
-        switch (data.type) {
+        switch (response.type) {
             case 'auth-client-request':
                 const canvas = document.getElementById(this.config.canvasId)
-                const qrData = this.generateQrData(data.message)
-                console.log(qrData)
-                QRCode.toCanvas(canvas, qrData, function (err: any) {
+                const queryParams = this.generateQueryParams(response.message!)
+                const redirectUri = `${this.config.loginUri}${queryParams}`
+                const schemeUri = `${this.config.schemeUri}${queryParams}`
+
+                try {
+                    window.location.href = schemeUri
+                } catch (err) {
+                    console.log(err)
+                }
+
+                const deeplinkElm = document.getElementById(this.config.deeplinkId)
+
+                if (deeplinkElm) {
+                    deeplinkElm.setAttribute('href', schemeUri)
+                }
+                
+                QRCode.toCanvas(canvas, redirectUri, function (err: any) {
                     if (err) {
                         console.error("Error: ", err)
                     }
@@ -43,24 +61,27 @@ export default class AuthClient {
                 return
             case 'auth-client-response':
                 console.log('response from server for the client!')
-                console.log(data)
+                const key = this.symKeyBytes!
+                const decrypted = EncryptionUtils.symDecrypt(response.message, key)
+
+                this.config.callback(decrypted)
                 return
         }
 
-        console.error(`Unknown message type: ${data.type}`, data)
+        console.error(`Unknown message type: ${response.type}`, response)
     }
 
     error(event: MessageEvent) {
         console.error("WebSocket error: ", event)
     }
 
-    generateQrData(didJwt: string) {
-        const symKeyBytes = EncryptionUtils.randomKey(32)
-        const symKeyHex = "0x" + Buffer.from(symKeyBytes).toString("hex")
+    generateQueryParams(didJwt: string) {
+        this.symKeyBytes = EncryptionUtils.randomKey(32)
+        const symKeyHex = "0x" + Buffer.from(this.symKeyBytes).toString("hex")
 
         // note: can't use `key` as a parameter as its a reserved word in react native
         // instead use `_k` (key) and `_r` (request)
-        return `${this.config.loginUri}?_k=${symKeyHex}&_r=${didJwt}`
+        return `?_k=${symKeyHex}&_r=${didJwt}`
     }
 
 }

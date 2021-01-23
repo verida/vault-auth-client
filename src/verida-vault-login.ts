@@ -31,6 +31,7 @@ export default function(config: Omit<AuthClientConfig, "loginUri" | "canvasId">)
           </div>
           <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
           <p style="text-align: center;">Scan this QR code on your mobile phone to login or signup.</p>
+          <p>Already on your phone with Verida Vault installed? <a href="" id="verida-auth-client-deeplink">Login with Verida Vault</a></p>
         </div>
       </div>
     </div>
