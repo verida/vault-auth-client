@@ -8,13 +8,15 @@ export default class AuthClient {
     ws: any
     config: AuthClientConfig
     symKeyBytes?: Uint8Array
+    modal: any
 
-    constructor(config: AuthClientConfig) {
+    constructor(config: AuthClientConfig, modal: any) {
         this.config = _.merge({
             schemeUri: 'veridavault://login-request',
             loginUri: 'https://vault.verida.io/start',
             deeplinkId: 'verida-auth-client-deeplink'
         }, config)
+        this.modal = modal
 
         this.ws = new WebSocket(config.serverUri)
         const client = this
@@ -63,7 +65,7 @@ export default class AuthClient {
                 console.log('response from server for the client!')
                 const key = this.symKeyBytes!
                 const decrypted = EncryptionUtils.symDecrypt(response.message, key)
-
+                this.modal.style.display = 'none'
                 this.config.callback(decrypted)
                 return
         }

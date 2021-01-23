@@ -8,11 +8,6 @@ import { AuthClientConfig } from './interfaces/AuthClient';
 const _ = require('lodash')
 
 export default function(config: Omit<AuthClientConfig, "loginUri" | "canvasId">) {
-  const veridaButton = document.querySelector("[verida-vault-login-btn]")
-  if (!veridaButton) {
-    throw new Error('Unable to locate login button')
-  }
-
   const authConfig: AuthClientConfig = _.merge({
     loginUri: 'https://vault.verida.io/start',
     canvasId: 'verida-auth-client-canvas'
@@ -41,6 +36,12 @@ export default function(config: Omit<AuthClientConfig, "loginUri" | "canvasId">)
         font-family: "NunitoSans";
         src: url(${ NunitoSans }) format("truetype");
       }
+
+      #verida-auth-client-canvas {
+        max-width: 300px;
+        max-height: 300px;
+      }
+
       .verida-modal-wrapper {
         display: none;
         position: fixed;
@@ -139,8 +140,6 @@ export default function(config: Omit<AuthClientConfig, "loginUri" | "canvasId">)
     }
   }
 
-  veridaButton.addEventListener('click', () => {
-    new AuthClient(authConfig)
-    modal && (modal.style.display = "block");
-  });
+  new AuthClient(authConfig, modal)
+  modal && (modal.style.display = "block");
 };
