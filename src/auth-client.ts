@@ -7,16 +7,17 @@ export default class AuthClient {
 
     ws: any
     config: AuthClientConfig
-    symKeyBytes?: Uint8Array
+    symKeyBytes: Uint8Array
     modal: any
 
     constructor(config: AuthClientConfig, modal: any) {
         this.config = _.merge({
             schemeUri: 'veridavault://login-request',
-            loginUri: 'https://vault.verida.io/start',
-            deeplinkId: 'verida-auth-client-deeplink'
+            loginUri: 'https://vault.testnet.verida.io/mobile/auth-request.html',
+            request: {}
         }, config)
         this.modal = modal
+        const symKeyBytes = this.symKeyBytes = EncryptionUtils.randomKey(32)
 
         this.ws = new WebSocket(config.serverUri)
         const client = this
@@ -27,7 +28,12 @@ export default class AuthClient {
 
         config = this.config
         this.ws.onopen = function() {
-            client.ws.send(JSON.stringify({type: 'generateJwt', appName: config.appName}))
+            const encryptedRequest = EncryptionUtils.symEncrypt(JSON.stringify(config.request), symKeyBytes)
+            const payload = {
+                request: encryptedRequest
+            }
+            
+            client.ws.send(JSON.stringify({type: 'generateJwt', appName: config.appName, payload}))
         }
 
         this.ws.onerror = this.error
@@ -43,8 +49,12 @@ export default class AuthClient {
                 const redirectUri = `${this.config.loginUri}${queryParams}`
                 const schemeUri = `${this.config.schemeUri}${queryParams}`
 
-                try {
-                    window.location.href = schemeUri
+                try {   
+                    const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+                    if (isMobile) {
+                        // On a mobile device, so attempting to auto-redirect to application
+                        window.location.href = schemeUri
+                    }
                 } catch (err) {
                     console.log(err)
                 }
@@ -62,7 +72,6 @@ export default class AuthClient {
                 })
                 return
             case 'auth-client-response':
-                console.log('response from server for the client!')
                 const key = this.symKeyBytes!
                 const decrypted = EncryptionUtils.symDecrypt(response.message, key)
                 this.modal.style.display = 'none'
@@ -78,7 +87,6 @@ export default class AuthClient {
     }
 
     generateQueryParams(didJwt: string) {
-        this.symKeyBytes = EncryptionUtils.randomKey(32)
         const symKeyHex = "0x" + Buffer.from(this.symKeyBytes).toString("hex")
 
         // note: can't use `key` as a parameter as its a reserved word in react native
