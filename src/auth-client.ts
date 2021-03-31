@@ -14,6 +14,7 @@ export default class AuthClient {
         this.config = _.merge({
             schemeUri: 'veridavault://login-request',
             loginUri: 'https://vault.testnet.verida.io/mobile/auth-request.html',
+            deeplinkId: 'verida-auth-client-deeplink',
             request: {}
         }, config)
         this.modal = modal
