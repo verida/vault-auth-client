@@ -1,59 +1,28 @@
-/*  eslint no-undef: ignore */
-import AuthClient from './index';
-// @ts-ignore
-import Logo from './assets/verida_vault_logo.svg';
-import BackgroundImage from './assets/verida_bg.png';
-// @ts-ignore
-import Sora from './assets/fonts/Sora-Regular.ttf';
-import { AuthClientConfig } from './interfaces/AuthClient';
-const _ = require('lodash')
+<!DOCTYPE html>
+<html lang="en">
 
-export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">) {
-  const authConfig: AuthClientConfig = _.merge({
-    loginUri: 'https://vault.verida.io/start',
-    canvasId: 'verida-auth-client-canvas'
-  }, config)
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-  const modalHTML = `
-  <div id="verida-modal" hidden="true" class="verida-modal-wrapper">
-    <div class="verida-modal-container">
-      <div class="verida-modal-header" id="verida-modal-header">
-        <img class="verida-modal-logo" src="${Logo}" alt="verida logo">
-        <span class="verida-modal-close" id="verida-modal-close">&times;</span>
-      </div>
-      <div class="verida-modal-body">
-        <div>
-          <h3 class="verida-modal-title">
-            Scan this QR code on your mobile phone to login or signup
-          </h3>
-          <p class="verida-body-content">Already on your phone with Verida Vault installed? <a href="##">Log in with
-          Verida Vault</a></p>
-        </div>
-        <div>
-          <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <style>
-    @font-face {
-      font-family: "Sora";
-      src: url(${Sora}) format("truetype");
-    }
-
-     #verida-auth-client-canvas {
-      width: 287px !important;
-      height: 287px !important;
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Sora:wght@500&display=swap"
+    rel="stylesheet">
+  <title>Document</title>
+  <style>
+    #verida-auth-client-canvas {
+      width: 287px;
+      height: 287px;
     }
 
     .verida-modal-wrapper {
-      display: none;
+      /* display: none; */
       position: fixed;
+      z-index: 2;
       left: 0;
       top: 0;
-      z-index: 9999;
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -64,13 +33,13 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       margin: 3% auto;
       padding: 0;
       border-radius: 14.35px;
-      background-image: url(${BackgroundImage});
+      background-image: url("./src/assets/verida_bg.png");
       background-position: 50% 100%;
       background-size: cover;
       min-height: 80%;
       width: 800px;
       height: 483px;
-      font-family: Sora, Avenir, Helvetica, Arial, sans-serif;
+      font-family: NunitoSans, Avenir, Helvetica, Arial, sans-serif;
       font-weight: 700;
       box-shadow: 0px 35px 45px rgba(7, 14, 39, 0.05);
     }
@@ -89,9 +58,10 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     }
 
     .verida-modal-qr {
-      margin: 1rem 0 0 1rem;
+      padding: 1.2rem 0 0 0.5rem;
       background: #FFFFFF;
       border-radius: 14.35px;
+      /* margin: 1rem 0 0 0; */
       box-shadow: 0px 35px 45px rgba(7, 14, 39, 0.05);
     }
 
@@ -113,7 +83,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     }
 
     .verida-body-content {
-      font-family: Sora;
+      font-family: Poppins;
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
@@ -152,10 +122,9 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       font-weight: lighter;
       background: #E0E3EA;
       opacity: 0.5;
+      margin: 0.4rem 0 0 0;
       backdrop-filter: blur(54.3656px);
       border-radius: 50%;
-      margin:0.5rem  0 0 0;
-      padding: 0.2rem 0 -0.5rem 0;
     }
 
     .verida-modal-logo {
@@ -188,27 +157,39 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       .verida-modal-title {
         font-size: 25px;
       }
+
+
       .verida-modal-body-title {
         width: 50%;
         height: max-content;
         flex-direction: column;
       }
     }
-    </style>
-  `
-  document.body.insertAdjacentHTML('beforeend', modalHTML)
+  </style>
+</head>
 
-  const modal: HTMLElement | null = document.getElementById('verida-modal');
-  const closeModal: HTMLElement | null = document.getElementById('verida-modal-close');
-  if (modal && closeModal) {
-    closeModal.onclick = () => modal.style.display = 'none';
-  }
-  window.onclick = function (event: Event) {
-    if (event.target === modal && modal !== null) {
-      modal.style.display = 'none';
-    }
-  }
+<body>
+  <div id="verida-modal" class="verida-modal-wrapper">
+    <div class="verida-modal-container">
+      <div class="verida-modal-header">
+        <img class="verida-modal-logo" src="./src/assets/verida_vault_logo.svg" alt="verida logo">
+        <span class="verida-modal-close" id="verida-modal-close">&times;</span>
+      </div>
+      <div class="verida-modal-body">
+        <div>
+          <h3 class="verida-modal-title">
+            Scan this QR code on your mobile phone to login or signup
+          </h3>
+          <p class="verida-body-content">Already on your phone with Verida Vault installed? <a href="##">Log in with
+              Verida Vault</a></p>
+        </div>
+        <div>
+          <!-- <button class="verida-button">login</button> -->
+          <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 
-  new AuthClient(authConfig, modal)
-  modal && (modal.style.display = "block");
-};
+</html>
