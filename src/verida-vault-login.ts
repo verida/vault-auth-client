@@ -167,8 +167,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       cursor: pointer;
     }
 
-    @media screen and (max-width: 700px),
-    screen and (max-height: 600px) {
+   @media screen and (max-width: 768px) {
       .verida-modal-qr {
         margin: auto;
       }
