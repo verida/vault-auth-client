@@ -14,7 +14,8 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     canvasId: 'verida-auth-client-canvas'
   }, config)
 
-
+ 
+  
   const modalHTML = `
   <div id="verida-modal" hidden="true" class="verida-modal-wrapper">
     <div class="verida-modal-container">
@@ -62,12 +63,10 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
 
     .verida-modal-container {
       margin: 3% auto;
-      padding: 0;
       border-radius: 14.35px;
       background-image: url(${BackgroundImage});
       background-position: 50% 100%;
       background-size: cover;
-      min-height: 80%;
       width: 800px;
       height: 483px;
       font-family: Sora, Avenir, Helvetica, Arial, sans-serif;
@@ -75,23 +74,19 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       box-shadow: 0px 35px 45px rgba(7, 14, 39, 0.05);
     }
 
-
-    .image-curved {
-      width: 800px;
-      height: 483px;
-    }
-
     .verida-modal-body {
       display: flex;
-      margin: 2rem 4rem;
+      margin: 1rem 4rem;
+      padding: 0.2rem;
       align-items: center;
       justify-content: center;
     }
 
     .verida-modal-qr {
-      margin: 1rem 0 0 1rem;
+      margin: 0.8rem 0.3rem 1rem 1rem;
       background: #FFFFFF;
       border-radius: 14.35px;
+      padding: 0.8rem;
       box-shadow: 0px 35px 45px rgba(7, 14, 39, 0.05);
     }
 
@@ -105,7 +100,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     .verida-modal-title {
       font-family: Sora;
       font-style: normal;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 32px;
       line-height: 40px;
       letter-spacing: -0.03em;
@@ -144,6 +139,10 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     }
 
     .verida-modal-close {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       color: #041133;
       width: 30px;
@@ -154,8 +153,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       opacity: 0.5;
       backdrop-filter: blur(54.3656px);
       border-radius: 50%;
-      margin:0.5rem  0 0 0;
-      padding: 0.2rem 0 -0.5rem 0;
+      margin: 0.5rem 0 0 0;
     }
 
     .verida-modal-logo {
@@ -172,12 +170,12 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     @media screen and (max-width: 700px),
     screen and (max-height: 600px) {
       .verida-modal-qr {
-        height: 80% !important;
-        width: 80% !important;
+        margin: auto;
       }
 
       .verida-modal-container {
         width: 90%;
+        height: 100%;
       }
 
       .verida-modal-body {
@@ -188,6 +186,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       .verida-modal-title {
         font-size: 25px;
       }
+
       .verida-modal-body-title {
         width: 50%;
         height: max-content;
@@ -196,13 +195,17 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     }
     </style>
   `
-  document.body.insertAdjacentHTML('beforeend', modalHTML)
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
 
   const modal: HTMLElement | null = document.getElementById('verida-modal');
   const closeModal: HTMLElement | null = document.getElementById('verida-modal-close');
+
+
   if (modal && closeModal) {
     closeModal.onclick = () => modal.style.display = 'none';
   }
+
   window.onclick = function (event: Event) {
     if (event.target === modal && modal !== null) {
       modal.style.display = 'none';
