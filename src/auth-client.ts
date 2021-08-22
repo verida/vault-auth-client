@@ -2,6 +2,9 @@ import { AuthClientConfig, AuthResponse } from "./interfaces/AuthClient"
 import EncryptionUtils from "@verida/encryption-utils"
 const _ = require("lodash")
 const QRCode = require("qrcode")
+const store = require('store')
+
+const VERIDA_USER_SIGNATURE = '_verida_auth_user_signature'
 
 export default class AuthClient {
 
@@ -18,30 +21,36 @@ export default class AuthClient {
             request: {}
         }, config)
         this.modal = modal
+
+        const decryptedSignature = store.get(VERIDA_USER_SIGNATURE);
+        if (decryptedSignature) {
+            this.config.callback(decryptedSignature)
+        }
         const symKeyBytes = this.symKeyBytes = EncryptionUtils.randomKey(32)
 
         this.ws = new WebSocket(config.serverUri)
         const client = this
 
-        this.ws.onmessage = function(event: MessageEvent) {
+        this.ws.onmessage = function (event: MessageEvent) {
             client.newMessage(event)
         }
 
         config = this.config
-        this.ws.onopen = function() {
+        this.ws.onopen = function () {
             const encryptedRequest = EncryptionUtils.symEncrypt(JSON.stringify(config.request), symKeyBytes)
             const payload = {
                 request: encryptedRequest
             }
-            
-            client.ws.send(JSON.stringify({type: 'generateJwt', appName: config.appName, payload}))
+
+            client.ws.send(JSON.stringify({ type: 'generateJwt', appName: config.appName, payload }))
         }
 
         this.ws.onerror = this.error
+
     }
 
     newMessage(event: MessageEvent) {
-        const response = <AuthResponse> JSON.parse(event.data)
+        const response = <AuthResponse>JSON.parse(event.data)
 
         switch (response.type) {
             case 'auth-client-request':
@@ -50,7 +59,7 @@ export default class AuthClient {
                 const redirectUri = `${this.config.loginUri}${queryParams}`
                 const schemeUri = `${this.config.schemeUri}${queryParams}`
 
-                try {   
+                try {
                     const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
                     if (isMobile) {
                         // On a mobile device, so attempting to auto-redirect to application
@@ -65,7 +74,7 @@ export default class AuthClient {
                 if (deeplinkElm) {
                     deeplinkElm.setAttribute('href', schemeUri)
                 }
-                
+
                 QRCode.toCanvas(canvas, redirectUri, function (err: any) {
                     if (err) {
                         console.error("Error: ", err)
@@ -74,7 +83,14 @@ export default class AuthClient {
                 return
             case 'auth-client-response':
                 const key = this.symKeyBytes!
+                const checkedValue: HTMLElement | any = document.getElementById('verida-checked');
+
+
                 const decrypted = EncryptionUtils.symDecrypt(response.message, key)
+                if (checkedValue.checked) {
+                    store.set(VERIDA_USER_SIGNATURE, decrypted)
+                }
+
                 this.modal.style.display = 'none'
                 this.config.callback(decrypted)
                 return

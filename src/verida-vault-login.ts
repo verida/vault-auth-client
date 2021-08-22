@@ -6,7 +6,10 @@ import BackgroundImage from './assets/verida_bg.png';
 // @ts-ignore
 import Sora from './assets/fonts/Sora-Regular.ttf';
 import { AuthClientConfig } from './interfaces/AuthClient';
-const _ = require('lodash')
+const _ = require('lodash');
+const store = require('store');
+
+const VERIDA_USER_SIGNATURE = '_verida_auth_user_signature';
 
 export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">) {
   const authConfig: AuthClientConfig = _.merge({
@@ -14,8 +17,8 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     canvasId: 'verida-auth-client-canvas'
   }, config)
 
- 
-  
+
+
   const modalHTML = `
   <div id="verida-modal" hidden="true" class="verida-modal-wrapper">
     <div class="verida-modal-container">
@@ -30,6 +33,17 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
           </h3>
           <p class="verida-body-content">Already on your phone with Verida Vault installed? <a href="##">Log in with
           Verida Vault</a></p>
+           <label class="verida-checkbox">
+            <span class="verida-checkbox-input">
+              <input type="checkbox" name="checkbox" id="verida-checked">
+              <span class="verida-checkbox-control">
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' aria-hidden="true" focusable="false">
+                  <path fill='none' stroke='currentColor' stroke-width='3' d='M1.73 12.91l6.37 6.37L22.79 4.59' />
+                </svg>
+              </span>
+            </span>
+            <span class="verida-radio-label">Remember my login </span>
+          </label>
         </div>
         <div>
           <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
@@ -167,6 +181,59 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
       cursor: pointer;
     }
 
+    .verida-checkbox {
+      display: grid;
+      grid-template-columns: min-content auto;
+      grid-gap: 0.5em;
+      color: #423BCE;
+      margin: 32px 0;
+    }
+
+    .verida-checkbox-control {
+      display: inline-grid;
+      width: 24px;
+      height: 24px;
+      background: #FFFFFF;
+      border: 1px solid #E0E3EA;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .verida-checkbox-control svg {
+      transition: transform 0.1s ease-in 25ms;
+      transform: scale(0);
+      transform-origin: bottom left;
+    }
+
+    .verida-checkbox-input {
+      display: grid;
+      grid-template-areas: "checkbox";
+    }
+
+    .verida-checkbox-input>* {
+      grid-area: checkbox;
+    }
+
+    .verida-checkbox-input input {
+      opacity: 0;
+      width: 1em;
+      height: 1em;
+    }
+
+    .verida-checkbox-input input:checked+.verida-checkbox-control svg {
+      transform: scale(1);
+    }
+
+    .verida-radio-label {
+      font-size: 14px;
+      line-height: 26px;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+      font-family: Sora;
+      color: rgba(17, 17, 17, 0.7);
+    }
+
+
    @media screen and (max-width: 768px) {
       .verida-modal-qr {
         margin: auto;
@@ -194,11 +261,13 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     }
     </style>
   `
-  
+
   document.body.insertAdjacentHTML('beforeend', modalHTML);
 
   const modal: HTMLElement | null = document.getElementById('verida-modal');
   const closeModal: HTMLElement | null = document.getElementById('verida-modal-close');
+
+  const decryptedSignature = store.get(VERIDA_USER_SIGNATURE);
 
 
   if (modal && closeModal) {
@@ -212,5 +281,10 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
   }
 
   new AuthClient(authConfig, modal)
-  modal && (modal.style.display = "block");
+  if (decryptedSignature && modal) {
+    modal.style.display = 'none'
+  }else{
+    modal && (modal.style.display = "block");
+  }
+  
 };
