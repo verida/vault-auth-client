@@ -49,6 +49,7 @@
   "dependencies": {
     "@verida/encryption-utils": "^0.2.1",
     "lodash": "^4.17.20",
-    "qrcode": "^1.4.4"
+    "qrcode": "^1.4.4",
+    "store": "^2.0.12"
   }
 }
