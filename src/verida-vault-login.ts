@@ -1,10 +1,11 @@
+/*eslint-disable*/
 /*  eslint no-undef: ignore */
 import AuthClient from './index';
-// @ts-ignore
-import Logo from './assets/verida_vault_logo.svg';
-import BackgroundImage from './assets/verida_bg.png';
+
+
 // @ts-ignore
 import Sora from './assets/fonts/Sora-Regular.ttf';
+
 import { AuthClientConfig } from './interfaces/AuthClient';
 const _ = require('lodash');
 const store = require('store');
@@ -23,7 +24,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
   <div id="verida-modal" hidden="true" class="verida-modal-wrapper">
     <div class="verida-modal-container">
       <div class="verida-modal-header" id="verida-modal-header">
-        <img class="verida-modal-logo" src="${Logo}" alt="verida logo">
+        <img class="verida-modal-logo" src="https://assets.verida.io/verida_vault_logo.svg" alt="verida logo">
         <span class="verida-modal-close" id="verida-modal-close">&times;</span>
       </div>
       <div class="verida-modal-body">
@@ -78,7 +79,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
     .verida-modal-container {
       margin: 3% auto;
       border-radius: 14.35px;
-      background-image: url(${BackgroundImage});
+      background-image: url("https://assets.verida.io/verida_bg.png");
       background-position: 50% 100%;
       background-size: cover;
       width: 800px;
