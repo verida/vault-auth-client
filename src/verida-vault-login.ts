@@ -1,7 +1,5 @@
-/*eslint-disable*/
 /*  eslint no-undef: ignore */
 import AuthClient from './index';
-
 
 // @ts-ignore
 import Sora from './assets/fonts/Sora-Regular.ttf';
@@ -47,7 +45,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
           </label>
         </div>
         <div>
-          <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas>
+           <canvas id="verida-auth-client-canvas" class="verida-modal-qr"></canvas><img src="" alt="" id="image" />
         </div>
       </div>
     </div>
@@ -284,8 +282,8 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
   new AuthClient(authConfig, modal)
   if (decryptedSignature && modal) {
     modal.style.display = 'none'
-  }else{
+  } else {
     modal && (modal.style.display = "block");
   }
-  
+
 };

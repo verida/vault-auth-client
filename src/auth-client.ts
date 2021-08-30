@@ -1,7 +1,7 @@
 import { AuthClientConfig, AuthResponse } from "./interfaces/AuthClient"
 import EncryptionUtils from "@verida/encryption-utils"
+import QrCode from 'qrcode-with-logos'
 const _ = require("lodash")
-const QRCode = require("qrcode")
 const store = require('store')
 
 const VERIDA_USER_SIGNATURE = '_verida_auth_user_signature'
@@ -54,10 +54,18 @@ export default class AuthClient {
 
         switch (response.type) {
             case 'auth-client-request':
-                const canvas = document.getElementById(this.config.canvasId)
                 const queryParams = this.generateQueryParams(response.message!)
                 const redirectUri = `${this.config.loginUri}${queryParams}`
                 const schemeUri = `${this.config.schemeUri}${queryParams}`
+                let qrcode = new QrCode({
+                    canvas: document.getElementById(this.config.canvasId) as any,
+                    content: redirectUri,
+                    width: 380,
+                    image: document.getElementById("image") as any,
+                    logo: {
+                        src: "https://assets.verida.io/verida_logo_512x512.png"
+                    }
+                });
 
                 try {
                     const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
@@ -74,12 +82,9 @@ export default class AuthClient {
                 if (deeplinkElm) {
                     deeplinkElm.setAttribute('href', schemeUri)
                 }
-
-                QRCode.toCanvas(canvas, redirectUri, function (err: any) {
-                    if (err) {
-                        console.error("Error: ", err)
-                    }
-                })
+                qrcode.toCanvas().then(() => {}).catch(error => {
+                    console.error("Error: ", { error })
+                });
                 return
             case 'auth-client-response':
                 const key = this.symKeyBytes!
