@@ -163,6 +163,7 @@ up your own using https://github.com/verida/vault-auth-server
     });
 ```
 
+
 ## Using Verida Custom Button
 
 Verida  would suggest you to use the following buttons for SSO login (Single Sign On) to maintain a consistent branding. you can save these images to your server cloud in order to use it on your application.
@@ -175,6 +176,6 @@ Login in with Verida `link`:
 
 ![verida button Link]()
 
- 
+
 
 
