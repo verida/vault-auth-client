@@ -36,7 +36,7 @@ export default function (config: Omit<AuthClientConfig, "loginUri" | "canvasId">
           Verida Vault</a></p>
            <label class="verida-checkbox">
             <span class="verida-checkbox-input">
-              <input type="checkbox" name="checkbox" id="verida-checked" >
+              <input type="checkbox" name="checkbox" id="verida-checked" checked>
               <span class="verida-checkbox-control">
                 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' aria-hidden="true" focusable="false">
                   <path fill='none' stroke='currentColor' stroke-width='3' d='M1.73 12.91l6.37 6.37L22.79 4.59' />
