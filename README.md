@@ -169,11 +169,11 @@ Verida  would suggest you to use the following buttons for SSO login (Single Sig
 
 Login in with Verida `button`:
 
-![verida button]()
+![verida button](http://assets.verida.io/connect_with_verida_dark.png)
 
 Login in with Verida `link`:
 
-![verida button Link]()
+![verida button Link](http://assets.verida.io/connect_with_verida_light.png)
 
  
 
