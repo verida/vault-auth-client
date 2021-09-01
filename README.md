@@ -111,7 +111,7 @@ up your own using https://github.com/verida/vault-auth-server
 
 `see example below:`
 
-![demo image](http://assets.verida.io/verida_logo.svg)
+![demo image](https://assets.verida.io/verida_logo.svg)
 
 3. Create an instance of the verida App using the response in the callback function from the `VeridaVaultLogin` and a open datastore see example:
 
@@ -166,15 +166,15 @@ up your own using https://github.com/verida/vault-auth-server
 
 ## Using Verida Custom Button
 
-Verida  would suggest you to use the following buttons for SSO login (Single Sign On) to maintain a consistent branding. you can save these images to your server cloud in order to use it on your application.
+Verida suggests you to use the following buttons for SSO login (Single Sign On) to maintain a consistent branding. You can save these images to your server cloud in order to use it on your application.
 
-Login in with Verida `button`:
+Connect with Verida (Light):
 
-![verida button]()
+![Verida Connect Light](https://assets.verida.io/connect_with_verida_light.png)
 
-Login in with Verida `link`:
+Connect with Verida (Dark):
 
-![verida button Link]()
+![Verida Connect Dark](https://assets.verida.io/connect_with_verida_dark.png)
 
 
 
